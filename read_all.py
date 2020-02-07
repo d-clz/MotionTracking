@@ -28,9 +28,9 @@ def main():
     file_path='/home/pi/bmx160/data.csv'
     if os.path.isfile(file_path)==True:
         os.remove(file_path)
-    with open('data.csv','w', newline = '') as file:
+    with open('data.csv','w', newline = '') as _file:
         fieldnames=['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'mx', 'my', 'mz', 't_stamp']
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(_file, fieldnames=fieldnames)
         writer.writeheader()
     while True:
         try:

@@ -17,6 +17,7 @@ def record_data(file_name):
     with open(file_name, 'a') as _file:
         writer = csv.writer(_file)
         writer.writerow([data[6],data[7],data[8],data[3],data[4],data[5],data[0],data[1],data[2],data[9]])
+    time.sleep(0.005)
     elapse_time=time.time()-start_time
     return elapse_time
 
@@ -27,6 +28,10 @@ def main():
     file_path='/home/pi/bmx160/data.csv'
     if os.path.isfile(file_path)==True:
         os.remove(file_path)
+    with open('data.csv','w', newline = '') as file:
+        fieldnames=['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'mx', 'my', 'mz', 't_stamp']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
     while True:
         try:
             elapse_time = record_data(file_path)

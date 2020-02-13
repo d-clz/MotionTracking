@@ -87,17 +87,17 @@ class BMX160:
     AccelRange_8G                    = (0x02)
     AccelRange_16G                   = (0x03)
 
-    ax_g = 8124
-    ay_g = 8099
-    az_g = 8341
-    ax_offset = 77
-    ay_offset = -329
-    az_offset = -355
-    gx_offset = -69
-    gy_offset = 19
-    gz_offset = -21
+#    ax_g = 8124
+#    ay_g = 8099
+#    az_g = 8341
+#    ax_offset = 77
+#    ay_offset = -329
+#    az_offset = -355
+#    gx_offset = -69
+#    gy_offset = 19
+#    gz_offset = -21
     
-    accelRange = BMX160_ACCEL_MG_LSB_4G;
+    accelRange = BMX160_ACCEL_MG_LSB_2G;
     gyroRange = BMX160_GYRO_SENSITIVITY_250DPS;
     
     def __init__(self, bus):
@@ -121,8 +121,8 @@ class BMX160:
             #Set accel odr: 100 Hz
             self.write_bmx_reg(self._BMX160_ACCEL_CONFIG_ADDR, 0b00101000);
             time.sleep(0.04);
-            #Set accel range: 4G
-            self.write_bmx_reg(self._BMX160_ACCEL_RANGE_ADDR, 0b00000101);
+            #Set accel range: 2G
+            self.write_bmx_reg(self._BMX160_ACCEL_RANGE_ADDR, 0b00000011);
             time.sleep(0.03);
             #Set gyro odr: 100 Hz
             self.write_bmx_reg(self._BMX160_GYRO_CONFIG_ADDR, 0b00101000);
@@ -249,18 +249,25 @@ class BMX160:
         else:
             accelz =  (data[19] << 8) | (data[18])
         sensortime =  (data[22] << 16) | (data[21] << 8) | data[20]
-        
+         
         magnx *= self.BMX160_MAGN_UT_LSB
         magny *= self.BMX160_MAGN_UT_LSB
         magnz *= self.BMX160_MAGN_UT_LSB
+
+        gyrox *= self.gyroRange
+        gyroy *= self.gyroRange
+        gyroz *= self.gyroRange
+
+        accelx *= self.accelRange
+        accely *= self.accelRange
+        accelz *= self.accelRange
+#        gyrox = (gyrox - self.gx_offset)*self.gyroRange
+#        gyroy = (gyroy - self.gy_offset)*self.gyroRange
+#        gyroz = (gyroz - self.gz_offset)*self.gyroRange
         
-        gyrox = (gyrox - self.gx_offset)*self.gyroRange
-        gyroy = (gyroy - self.gy_offset)*self.gyroRange
-        gyroz = (gyroz - self.gz_offset)*self.gyroRange
-        
-        accelx = (accelx - self.ax_offset)/self.ax_g
-        accely = (accely - self.ay_offset)/self.ay_g
-        accelz = (accelz - self.az_offset)/self.az_g
+#        accelx = (accelx - self.ax_offset)/self.ax_g
+#        accely = (accely - self.ay_offset)/self.ay_g
+#        accelz = (accelz - self.az_offset)/self.az_g
         
         out_put = []
         out_put.append(magnx)
